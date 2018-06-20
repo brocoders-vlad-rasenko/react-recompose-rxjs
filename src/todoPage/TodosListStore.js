@@ -1,13 +1,24 @@
 import { BehaviorSubject } from 'rxjs'
+import { scan } from 'rxjs/operators'
 
 export class TodosListStore {
   constructor () {
-    this.serverTodos$ = new BehaviorSubject([])
+    this.subject = new BehaviorSubject([])
+    
+    this.flow$ = this.subject.pipe(
+      scan((stor, cb) => cb(stor))
+    )
   }
+  
+  add = todo => this.subject.next(stor => stor.concat(todo))
 
-  refresh = () => this.serverTodos$.next([{ id: 2, text: 'Smth new' }])
+  remove = todo => this.subject.next(stor => {
+    const idx = stor.indexOf(todo)
+    stor.splice(idx, 1)
+    return stor
+  })
 
-  addTodo = (todo) => this.serverTodos$.next([{ id: Date.now(), ...todo }, ...this.serverTodos$.value])
+  clear = () => this.subject.next(() => [])
 }
 
 export const todosListStore = new TodosListStore()
