@@ -4,10 +4,7 @@ import {
   setObservableConfig
 } from 'recompose'
 import {from} from 'rxjs'
-import SimpleFormStream from './Form'
-import CounterStream, { Counter, WeirdCounter } from './Counter'
-import CounterWithInterval from './CounterWithInterval'
-import CounterWithPersonLoader from './CounterWithPersonLoader'
+import TodosList from './todoPage/TodoList'
 
 setObservableConfig({
   fromESObservable: from
@@ -16,8 +13,16 @@ setObservableConfig({
 class App extends Component {
   render () {
     return (
-      <div>
-        <h1>Hello</h1>
+      <div
+        style={{
+          marginTop: 40,
+          display: 'flex',
+          justifyContent: 'flex-start',
+          flexDirection: 'column',
+          textAlign: 'left'
+        }}
+      >
+        {/* <h1>Hello</h1>
         <SimpleFormStream />
         <CounterStream value={3}>
           <WeirdCounter />
@@ -25,7 +30,9 @@ class App extends Component {
           <Counter />
         </CounterStream>
         <CounterWithInterval />
-        <CounterWithPersonLoader />
+        <CounterWithPersonLoader /> */}
+        {/* <Form /> */}
+        <TodosList one={'two'} />
       </div>
     )
   }

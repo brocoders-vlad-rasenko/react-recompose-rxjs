@@ -1,29 +1,35 @@
 import React from 'react'
-import {componentFromStream, createEventHandler} from 'recompose'
-import { map, startWith, delay } from 'rxjs/operators'
+import { componentFromStream, createEventHandler } from 'recompose'
+import { combineLatest } from 'rxjs'
+import { map, startWith, scan } from 'rxjs/operators'
 
-const SimpleForm = ({text, onInput}) => (
-  <div>
-    <input type='text' onInput={onInput} />
-    <h2>{text}</h2>
-  </div>
-)
+const SimpleForm = ({handleChange, values}) => {
+  return (
+    <div>
+      <input type='text' onChange={handleChange('title')} value={values.title} />
+      <h2>{values.title}</h2>
+      <button>Press me</button>
+    </div>
+  )
+}
 
 const SimpleFormStream = componentFromStream(
   props$ => {
-    const {stream: onInput$, handler: onInput} = createEventHandler()
+    const {stream, handler} = createEventHandler()
+    const handleChange = name => ({target}) => handler({[name]: target.value})
 
-    const text$ = onInput$.pipe(
-      map(e => e.target.value),
-      delay(500),
-      startWith('')
+    const data$ = stream.pipe(
+      startWith({ title: '' }),
+      scan((values, curr) => ({...values, ...curr}), {})
     )
 
-    return text$
-      .pipe(
-        map(text => ({text, onInput})),
-        map(SimpleForm)
-      )
+    return combineLatest(
+      props$,
+      data$
+    ).pipe(
+      map(([props, data]) => ({ ...props, values: data, handleChange })),
+      map(SimpleForm)
+    )
   }
 )
 

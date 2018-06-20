@@ -1,6 +1,6 @@
 import React from 'react'
 import { compose, createEventHandler, mapPropsStream } from 'recompose'
-import { switchMap, mapTo, scan, startWith, pluck, catchError, tap } from 'rxjs/operators'
+import { switchMap, mapTo, scan, startWith, pluck, catchError } from 'rxjs/operators'
 import { merge, of, zip, from, interval } from 'rxjs'
 import { ajax } from 'rxjs/ajax'
 
